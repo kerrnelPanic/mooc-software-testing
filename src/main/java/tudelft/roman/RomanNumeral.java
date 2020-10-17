@@ -18,17 +18,30 @@ public class RomanNumeral {
         map.put('M', 1000);
     }
 
-    public int convert(String s) {
+    public int convert(String s) throws Exception {
 
         int convertedNumber = 0;
         for(int i = 0; i < s.length(); i++) {
-            int currentNumber = map.get(s.charAt(i));
-            int next = i+1 < s.length() ? map.get(s.charAt(i+1)) : 0;
+            Integer currentNumber = map.get(s.charAt(i));
+            Integer next = i + 1 < s.length() ? map.get(s.charAt(i + 1)) : 0;
+            Integer secondNext = i + 2 < s.length() ? map.get(s.charAt(i + 2)) : 0;
 
-            if(currentNumber >= next)
+            if (currentNumber.equals(next) && currentNumber.equals(secondNext)) {
+                convertedNumber += currentNumber + next + secondNext;
+                i+=2;
+            }
+            else if (currentNumber.equals(next) && currentNumber > secondNext) {
+                convertedNumber += currentNumber + next;
+                i++;
+            }
+            else if (currentNumber < next) {
+                convertedNumber += next - currentNumber;
+                i++;
+            }
+            else if(currentNumber > next)
                 convertedNumber += currentNumber;
             else
-                convertedNumber -= currentNumber;
+                throw new Exception("Invalid roman number");
         }
 
         return convertedNumber;
